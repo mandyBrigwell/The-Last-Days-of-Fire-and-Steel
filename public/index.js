@@ -1,6 +1,7 @@
 // The Last Days of Fire and Steel
 // 2022 Mandy Brigwell
 // Fonts from Google Fonts, released under open source licenses and usable in any non-commercial or commercial project.
+// Code and soundtrack are original works by Mandy Brigwell
 
 let randomSeedValue = ~~(fxrand()*12345);
 let noiseSeedValue = ~~(fxrand()*56789);
@@ -15,7 +16,7 @@ var titleAlpha = 360;
 var messageAlpha = 360;
 var messageString = "Press [I] for information";
 var startFrame, endFrame, requiredFrames, postRenderFrames;
-var instructionText = "Show/hide this information: [I]\nFullscreen: [double click]\n\nSave image: [S]\n\nSound [O]\n\nReplay current render sequence: [R]\nRe-render with new parameters: [P]\nInfinite render mode: [space]\n\nDecrease resolution: [Q]\nDefault resolution: [W]\nIncrease resolution: [E]\n\nToggle elements\nDimming and shadows: [V]\nSky and water: [B]\nAll colour variants: [N]\nIndividual colour variants: [1-5]\nStructures: [M]\nSky events: [C]\nScaffolds: [X]\nReactivate all: [Z]\n\nNote: Saved files are exported as a PNG at the\ncurrent resolution. Increased resolution\nwill greatly lengthen render time and\nnoticeably decrease the framerate.\n\n";
+var instructionText = "Show/hide information: [I]\n\nFullscreen: [double click]\n\nSave PNG: [S]\n\nSound: [O]\n\nReplay current render sequence: [R]\nRe-render with new parameters: [P]\nInfinite render mode: [space]\n\nToggle elements\nDimming and shadows: [V]\nSky and water: [B]\nAll colour variants: [N]\nIndividual colour variants: [1-5]\nStructures: [M]\nSky events: [C]\nScaffolds: [X]\nReactivate all: [Z]\n\nSaved files are exported\nas a PNG at a resolution\nof 2048x2048 pixels";
 var infoText;
 var firstRenderComplete = false;
 
@@ -24,8 +25,6 @@ var titleFont, labelFont;
 
 // Prepare soundtrack for preloading
 var soundtrack;
-var soundtrackVolume = 0;
-var soundtrackTargetVolume = 0;
 
 // Rendering mode flags
 var renderMain = true;
@@ -262,7 +261,6 @@ function createInfo() {
 	}
 	
 	infoText += "\n";
-	infoText += "\nRendering resolution: " + fullRes;
 	infoText += "\nColour palette: " + colorMapName;
 	infoText += "\nLighting: " + coordinateDirectionDescription[coordinateDirection];
 	infoText += "\nSky: " + (starsArray.length > 0 ? (starsArray.length == 1 ? "1 star, " : starsArray.length + " stars, ") : "No stars, ");
@@ -772,51 +770,54 @@ function keyPressed() {
 		displayMessage("Render saved ");
 	}
 
-	if (key == 'q') {
-		currentRes = fullRes;
-		fullRes = max(128, fullRes/2);
-		if (currentRes != fullRes) {
-			createInfo();
-			createGraphicsBuffers();
-			startRender();
-			displayMessage("Rendering resolution decreased to " + fullRes);
-		} else {
-			displayMessage("Rendering resolution is at the minimum of 128")
-		}
-	}
-
-	if (key == 'w') {
-		currentRes = fullRes;
-		fullRes = 2048;
-		if (currentRes != fullRes || eightBidouMode) {
-			eightBidouMode = false;
-			createInfo();
-			createGraphicsBuffers();
-			startRender();
-			displayMessage("Rendering resolution returned to the default of " + fullRes);
-		} else {
-			displayMessage("Rendering resolution is at the default of 2048");
-		}
-	}
-
 	
 	if (key == 'r') {
 		infinityMode = false;
 		startRender();
 	}
 
-	if (key == 'e') {
-		var currentRes = fullRes;
-		fullRes = min(8192, fullRes*2);
-		if (currentRes != fullRes) {
-			createInfo();
-			createGraphicsBuffers();
-			startRender();
-			displayMessage("Rendering resolution increased to " + fullRes);
-		} else {
-			displayMessage("Rendering resolution is at the maximum of 8192");
-		}
-	}
+	// Changing resolution can affect placement of scaffolds and overlay.
+// Also, larger resolutions greatly increase render time and affect the experience
+// This is, therefore, deactivated in the final build
+// 	if (key == 'q') {
+// 		currentRes = fullRes;
+// 		fullRes = max(128, fullRes/2);
+// 		if (currentRes != fullRes) {
+// 			createInfo();
+// 			createGraphicsBuffers();
+// 			startRender();
+// 			displayMessage("Rendering resolution decreased to " + fullRes);
+// 		} else {
+// 			displayMessage("Rendering resolution is at the minimum of 128")
+// 		}
+// 	}
+// 
+// 	if (key == 'w') {
+// 		currentRes = fullRes;
+// 		fullRes = 2048;
+// 		if (currentRes != fullRes || eightBidouMode) {
+// 			eightBidouMode = false;
+// 			createInfo();
+// 			createGraphicsBuffers();
+// 			startRender();
+// 			displayMessage("Rendering resolution returned to the default of " + fullRes);
+// 		} else {
+// 			displayMessage("Rendering resolution is at the default of 2048");
+// 		}
+// 	}
+// 
+// 	if (key == 'e') {
+// 		var currentRes = fullRes;
+// 		fullRes = min(8192, fullRes*2);
+// 		if (currentRes != fullRes) {
+// 			createInfo();
+// 			createGraphicsBuffers();
+// 			startRender();
+// 			displayMessage("Rendering resolution increased to " + fullRes);
+// 		} else {
+// 			displayMessage("Rendering resolution is at the maximum of 8192");
+// 		}
+// 	}
 
 	if (key == '8') {
 		eightBidouMode = !eightBidouMode;
@@ -839,16 +840,16 @@ function keyPressed() {
 	}
 	
 	// Test mode - deactivated in final build
-	if (key == 't') {
-		testRenderCount = 0;
-		testRendersRequired = 64;
-		infinityMode = true;
-		saveTest = true;
-		initiate();
-		createInfo();
-		startRender();
-		displayMessage("Sixty-four test renders in progress");
-	}
+// 	if (key == 't') {
+// 		testRenderCount = 0;
+// 		testRendersRequired = 64;
+// 		infinityMode = true;
+// 		saveTest = true;
+// 		initiate();
+// 		createInfo();
+// 		startRender();
+// 		displayMessage("Sixty-four test renders in progress");
+// 	}
 
 	if (key == ' ') {
 		if (!infinityMode) {
@@ -1068,7 +1069,6 @@ function pushColorStructures() {
 }
 
 function pushRenderQuotes() {
-	renderQuotes.push("Machinery clatters in the night, the sound carrying for several miles. We approach from the south, afraid.");
 	renderQuotes.push("...a circle of thick, carbonised girder, sheathed by tenacious fragments of concrete...");
 	renderQuotes.push("...and somehow on the rim there are buildings still standing; a circle of thick, smoke-stricken girder.");
 	renderQuotes.push("...and to think it was unthinkable that they should ever fall, should ever attain this state of crushed unreality.");
@@ -1079,8 +1079,10 @@ function pushRenderQuotes() {
 	renderQuotes.push("...the interlocking teeth of the cogs that drive the world...");
 	renderQuotes.push("...the skyline a mouth full of splintered grey teeth, crumbling and shifting into new configurations like a stirred ants' nest.");
 	renderQuotes.push("...there should be nothing but the trickling sound of shifting brick fragments, all stone chip tinkles and clicks...");
+	renderQuotes.push("'It'll never hold,' you shouted, and even as you spoke the bricks began to fall, thudding to earth in a flock of hammers.");
 	renderQuotes.push("'It's a beautiful dream,' you said once, still not really understanding what it meant.");
 	renderQuotes.push("'They must have started the machine,' I call back to you.");
+	renderQuotes.push("All night the hammers pounded, forcing unwilling metal into new and ever more convoluted shapes.");
 	renderQuotes.push("And soon the rain will come, I imagine, and wash all this away...");
 	renderQuotes.push("But back here, in gravity's thrall, I can see - far away to the right - a crater...");
 	renderQuotes.push("But with a sound like rushing feet it would all come to an end; it would always come to an end...");
@@ -1097,8 +1099,10 @@ function pushRenderQuotes() {
 	renderQuotes.push("I'm very much aware of the tall, half-deconstructed buildings behind me, cracked to the foundations but still holding...");
 	renderQuotes.push("It shouldn't be quiet; the air should be anything but undisturbed.");
 	renderQuotes.push("It's like being too far away from home, somehow; it's that moment when you realise you might never get back.");
+	renderQuotes.push("Machinery clatters in the night, the sound carrying for several miles. We approach from the south, afraid.");
 	renderQuotes.push("Or is this vision merely a reflection of the way the universe works; the interlocking teeth of the cogs that drive the world?");
 	renderQuotes.push("Smoke poured endlessly from the stacks, and the great dome hummed with barely-restrained power.");
+	renderQuotes.push("Smoke poured out as we watched, and the grinding sound of the mechanism reached a new zenith.");
 	renderQuotes.push("The blackened bricks remind me of home; a poem to some future where the industrial finally won.");
 	renderQuotes.push("The buildings are like splintered shells around me, the skyline a mouth full of cracked grey teeth...");
 	renderQuotes.push("The edge is just in front of me. Asphalt ends suddenly, the road dragged downwards and inwards with such force that the crack is clean and sudden...");
@@ -1107,7 +1111,11 @@ function pushRenderQuotes() {
 	renderQuotes.push("The pale light coruscated on the snakeskin water, each glittering wavelet a small gem amidst the darkness.");
 	renderQuotes.push("The sky, full of dust and whirling galaxies, a fine stone mist swirling like smoke.");
 	renderQuotes.push("The spire pushed its way through the low cloud, tiny stipples of light glittering along its length.");
+	renderQuotes.push("The wind insinuated chill fingers between the gaps in the stonework. Still, even with no roof, it was better than nothing.");
 	renderQuotes.push("There is no way down and there's nothing I can do, not now, so I lie back and watch the sky.");
+	renderQuotes.push("There were definite cracks in the structure, ranging from barely-visible hairlines through to deeper, more serious scars.");
 	renderQuotes.push("They crackle in my head like footfalls in a crisp frost, leaving tracks in their wake that I mentally pace...");
 	renderQuotes.push("We crept closer to the structures, hardly daring to breathe. I saw you unfasten the satchel; make ready with the goods.");
+	renderQuotes.push("We stayed there until dawn, huddled amongst the hollow reeds, unsure whether to advance or retreat.");
+	renderQuotes.push("When the rain came it was heavy with soot, a blackened liquid suspension of particulate filth.");
 }
