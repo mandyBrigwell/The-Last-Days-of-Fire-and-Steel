@@ -1,3 +1,8 @@
+
+
+
+
+
 ‘The Last Days of Fire and Steel’
 Released at 18:00 UTC on #fxhash 1.0
 
@@ -6,3 +11,25 @@ An #generativeart industrial landscape, rendered over 360 frames, with sound, va
 https://mandybrigwell.com/current-collections/the-last-days-of-fire-and-steel…
 
 #tezos #nft #p5js
+
+
+
+
+
+‘The Last Days of Fire and Steel’
+A multimedia generative artwork by Mandy Brigwell
+
+Story:
+https://www.mandybrigwell.com/the-last-days-of-fire-and-steel-narrative
+
+Artwork:
+https://www.fxhash.xyz/generative/slug/the-last-days-of-fire-and-steel
+
+Details:
+https://www.mandybrigwell.com/current-collections/the-last-days-of-fire-and-steel
+
+Soundtrack:
+https://teia.art/objkt/718772
+
+Github:
+https://github.com/mandyBrigwell/The-Last-Days-of-Fire-and-Steel
