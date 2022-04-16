@@ -710,7 +710,7 @@ function draw() {
 	
 	// Render message text
 	if (messageAlpha > 0) {
-		messageAlpha -= map(messageAlpha, 0, 360, 2, 16);
+		messageAlpha -= map(messageAlpha, 0, 360, 1, 8) * (elapsedFrame < requiredFrames ? 1 : 0.5);
 		textAlign(CENTER, CENTER);
 		textSize(screenSize*0.02);
 		textFont("monospace");
@@ -768,12 +768,6 @@ function keyPressed() {
 			save(saveBuffer, "TheLastDaysOfFireAndSteel" + nf(hour(), 2, 0) + nf(minute(), 2, 0) + nf(second(), 2), "png");
 		}
 		displayMessage("Render saved ");
-	}
-
-	
-	if (key == 'r') {
-		infinityMode = false;
-		startRender();
 	}
 
 	// Changing resolution can affect placement of scaffolds and overlay.
@@ -836,9 +830,16 @@ function keyPressed() {
 		initiate();
 		createInfo();
 		startRender();
-		displayMessage("A new day begins...");
+		displayMessage(["A new day begins...", "A new day dawns...", "A new beginning...", "A fresh start...", "A new beginning...", "A different time...", "A different place..."][~~random(6)]);
 	}
 	
+	if (key == 'r') {
+		infinityMode = false;
+		displayMessage(["The day begins anew...", "The day begins again...", "A familiar day dawns...", "A familiar place...", "Same time, same place...", "Time loops back..."][~~random(6)]);
+		createInfo();
+		startRender();
+	}
+
 	// Test mode - deactivated in final build
 // 	if (key == 't') {
 // 		testRenderCount = 0;
@@ -1030,8 +1031,6 @@ class Overlay {
 		this.tilt = tilt;
 	}
 }
-
-
 
 function pushColorStructures() {	
 	colorStructure.push(["Barium", "f17105", "e6c229","f17105","d11149", "6610f2","1a8fe3"]);
